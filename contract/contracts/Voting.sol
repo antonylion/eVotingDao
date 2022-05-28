@@ -7,10 +7,9 @@ pragma abicoder v2;
  * @dev Implements voting process along with vote delegation
  */
 contract Ballot {
-   string private test;
 
     struct Voter {
-        uint weight; // weight is accumulated by delegation
+        bool rightToVote;
         bool voted;  // if true, that person already voted
         uint vote;   // index of the voted proposal
     }
@@ -26,30 +25,23 @@ contract Ballot {
 
     Candidate[] public candidates;
     
-    enum State { Created, Voting, Ended } // State of voting period
+    enum State {
+        RegisteringCandidates,
+        RegisteringVoters,
+        VotingSession,
+        TallyVotes
+    }
     
     State public state;
 
-    constructor(string[] memory candidateNames) {
-        test = "ciao";
+    constructor() {
         chairperson = msg.sender;
-        voters[chairperson].weight = 1;
-        state = State.Created;
-        
-        for (uint i = 0; i < candidateNames.length; i++) {
-            candidates.push(Candidate({
-                name: candidateNames[i],
-                voteCount: 0
-            }));
-        }
-    }
-
-    function get_test() public view returns(string memory){
-        return test;
+        voters[chairperson].rightToVote = true;
+        state = State.RegisteringCandidates;
     }
     
     // MODIFIERS
-    modifier onlySmartContractOwner() {
+    modifier onlyChairperson() {
         require(
             msg.sender == chairperson,
             "Only chairperson can start and end the voting"
@@ -57,104 +49,99 @@ contract Ballot {
         _;
     }
     
-    modifier CreatedState() {
-        require(state == State.Created, "it must be in Started");
+    modifier registeringCandidatesState() {
+        require(state == State.RegisteringCandidates, "it must be in Registering Candidate");
         _;
     }
     
-    modifier VotingState() {
-        require(state == State.Voting, "it must be in Voting Period");
+    modifier registeringVotersState() {
+        require(state == State.RegisteringVoters, "it must be in Registering Voters");
         _;
     }
     
-    modifier EndedState() {
-        require(state == State.Ended, "it must be in Ended Period");
+    modifier votingSessionState() {
+        require(state == State.VotingSession, "it must be in Voting Session");
         _;
     }
     
-    function addCandidates(string[] memory candidateNames) 
-        public 
-        EndedState
+    modifier tallyVotesState() {
+        require(state == State.TallyVotes, "it must be in Tally Votes");
+        _;
+    }
+
+    // TODO insert modifier onlyChairPerson, modifier state
+    function startRegisteringCandidates() public{
+        state = State.RegisteringCandidates;
+    }
+    
+    // TODO insert modifier onlyChairPerson, modifier state
+    function startRegisteringVoters() public{
+        state = State.RegisteringVoters;
+    }
+    
+    // TODO insert modifier onlyChairPerson, modifier state
+    function startVotingSession() public{
+        state = State.VotingSession;
+    }
+
+    // TODO insert modifier onlyChairPerson, modifier state
+    function startTallyVotes() public{
+        state = State.TallyVotes;
+    }
+    
+
+    function registerCandidate(string memory candidateName) public
+        registeringCandidatesState 
+        onlyChairperson 
     {
-        state = State.Created;
-        for (uint i = 0; i < candidateNames.length; i++) {
-            candidates.push(Candidate({
-                name: candidateNames[i],
+        candidates.push(Candidate({
+                name: candidateName,
                 voteCount: 0
             }));
-        }
     }
-    
-    // to start the voting period
-    // TO-DO: insert the OnlyChainPerson modifier
-    function startVote() 
-        public
-        CreatedState
-    {
-        state = State.Voting;
-    }
-    
-    /*    
-     * to end the voting period
-     * can only end if the state in Voting period
-    */
-    function endVote() 
-        public 
-        onlySmartContractOwner
-        VotingState
-    {
-        state = State.Ended;
-    }
-    
     
     /** 
      * @dev Give 'voter' the right to vote on this ballot. May only be called by 'chairperson'.
      * @param voter address of voter
      */
-    function giveRightToVote(address voter) public {
-        require(
-            msg.sender == chairperson,
-            "Only chairperson can give right to vote."
-        );
-        require(
-            !voters[voter].voted,
-            "The voter already voted."
-        );
-        require(voters[voter].weight == 0);
-        voters[voter].weight = 1;
+    function giveRightToVote(address voter) public 
+        registeringVotersState
+        onlyChairperson
+    {
+        require(voters[voter].rightToVote == false, "Has already the right to vote");
+        voters[voter].rightToVote = true;
     }
 
     /**
      * @dev Give your vote (including votes delegated to you) to candidate 'candidates[candidate].name'.
      * @param candidate index of candidate in the candidates array
      */
-    function vote(uint candidate) 
-        public
-        VotingState
+    function vote(uint candidate) public 
+        votingSessionState
     {
         Voter storage sender = voters[msg.sender];
-        require(sender.weight != 0, "Has no right to vote");
         require(!sender.voted, "Already voted.");
+        require(sender.rightToVote, "Has no right to vote");
         sender.voted = true;
         sender.vote = candidate;
-
-        // If 'candidate' is out of the range of the array,
-        // this will throw automatically and revert all
-        // changes.
-        candidates[candidate].voteCount += sender.weight;
+        candidates[candidate].voteCount++;
+        sender.rightToVote = false;
     }
 
-    function winningCandidate() 
-        public
-        EndedState
-        view
-        returns (string memory winnerName_)
+    function getCandidates() public view returns(Candidate[] memory){
+        return candidates;
+    }
+
+    function tallyVotes() public view 
+        tallyVotesState
+        onlyChairperson
+        returns (string memory winnerName)
     {
         uint winningVoteCount = 0;
         for (uint p = 0; p < candidates.length; p++) {
             if (candidates[p].voteCount > winningVoteCount) {
                 winningVoteCount = candidates[p].voteCount;
-                winnerName_ = candidates[p].name;
+                winnerName = candidates[p].name;
             }
         }
     }
