@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const Ballot = await hre.ethers.getContractFactory("Ballot");
-  const ballot = await Ballot.deploy(["Ale", "Antony", "Nera", "Remy"]);
+  const ballot = await Ballot.deploy(["Alessandro", "Antony", "Nera", "Remy"]);
 
   await ballot.deployed();
 

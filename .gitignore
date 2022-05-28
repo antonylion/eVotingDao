@@ -1,2 +1,6 @@
 client/node_modules
 contract/node_modules
+.DS_Store
+client/.DS_Store
+contract/.DS_Store
+contract/artifacts/build-info

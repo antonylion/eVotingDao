@@ -19,7 +19,7 @@ contract Ballot {
         uint voteCount; // number of accumulated votes
     }
 
-    address public chairperson;
+    address private chairperson;
 
     mapping(address => Voter) public voters;
 
@@ -69,30 +69,37 @@ contract Ballot {
         _;
     }
 
-    // TODO insert modifier onlyChairPerson, modifier state
-    function startRegisteringCandidates() public{
+    function startRegisteringCandidates() public
+        tallyVotesState
+        onlyChairperson
+    {
         state = State.RegisteringCandidates;
     }
     
-    // TODO insert modifier onlyChairPerson, modifier state
-    function startRegisteringVoters() public{
+    function startRegisteringVoters() public
+        registeringCandidatesState
+        onlyChairperson
+    {
         state = State.RegisteringVoters;
     }
     
-    // TODO insert modifier onlyChairPerson, modifier state
-    function startVotingSession() public{
+    function startVotingSession() public
+        registeringVotersState
+        onlyChairperson
+    {
         state = State.VotingSession;
     }
 
-    // TODO insert modifier onlyChairPerson, modifier state
-    function startTallyVotes() public{
+    function endVotingSession() public
+        votingSessionState
+        onlyChairperson    
+    {
         state = State.TallyVotes;
     }
     
 
     function registerCandidate(string memory candidateName) public
-        registeringCandidatesState 
-        onlyChairperson 
+        registeringCandidatesState
     {
         candidates.push(Candidate({
                 name: candidateName,
@@ -130,6 +137,10 @@ contract Ballot {
 
     function getCandidates() public view returns(Candidate[] memory){
         return candidates;
+    }
+
+    function getChairperson() public view returns(address){
+        return chairperson;
     }
 
     function tallyVotes() public view 
