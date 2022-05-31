@@ -37,7 +37,7 @@ contract Ballot {
     constructor() {
         chairperson = msg.sender;
         voters[chairperson].rightToVote = true;
-        state = State.RegisteringCandidates;
+        state = State.TallyVotes;
     }
     
     // MODIFIERS
@@ -70,29 +70,29 @@ contract Ballot {
     }
 
     function startRegisteringCandidates() public
-        tallyVotesState
         onlyChairperson
+        tallyVotesState
     {
         state = State.RegisteringCandidates;
     }
     
     function startRegisteringVoters() public
-        registeringCandidatesState
         onlyChairperson
+        registeringCandidatesState
     {
         state = State.RegisteringVoters;
     }
     
     function startVotingSession() public
-        registeringVotersState
         onlyChairperson
+        registeringVotersState
     {
         state = State.VotingSession;
     }
 
     function endVotingSession() public
-        votingSessionState
-        onlyChairperson    
+        onlyChairperson
+        votingSessionState 
     {
         state = State.TallyVotes;
     }
@@ -155,5 +155,14 @@ contract Ballot {
                 winnerName = candidates[p].name;
             }
         }
+    }
+
+    function returnCurrentState() external view returns (string memory) {
+        State temp = state;
+        if (temp == State.RegisteringCandidates) return "Registering Candidates";
+        if (temp == State.RegisteringVoters) return "Registering Voters";
+        if (temp == State.VotingSession) return "Voting Session";
+        if (temp == State.TallyVotes) return "Tally Votes";
+        return "";
     }
 }
