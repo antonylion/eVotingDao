@@ -157,7 +157,7 @@ contract Ballot {
         }
     }
 
-    function returnCurrentState() external view returns (string memory) {
+    function getCurrentState() external view returns (string memory) {
         State temp = state;
         if (temp == State.RegisteringCandidates) return "Registering Candidates";
         if (temp == State.RegisteringVoters) return "Registering Voters";

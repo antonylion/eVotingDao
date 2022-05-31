@@ -5,13 +5,14 @@ import "./App.css"
 
 function App() {
   const [winnerName, setWinnerName] = useState('');
+  const [currentState, setCurrentState] = useState('');
   const [voterAddress, setVoterAddress] = useState('');
   const [candidateName, setCandidateName] = useState('');
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum)
-  const signer = provider.getSigner()
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
 
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
   // The ERC-20 Contract ABI, which is a common contract interface
   // for tokens (this is the Human-Readable ABI format)
@@ -85,6 +86,19 @@ function App() {
           "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCurrentState",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
         }
       ],
       "stateMutability": "view",
@@ -219,18 +233,19 @@ function App() {
       await provider.send("eth_requestAccounts", []);
     }
 
-    const getChairperson = async () => {
-      const chairperson = await contract.getChairperson();
-      console.log(chairperson);
+    const getCurrentState = async () => {
+      const state = await contract.getCurrentState();
+      switch(state){
+        case "Tally Votes"
+      }
+
     }
 
     connectWallet()
       .catch(console.error);
 
-    /* it throws call revert exception
-    getChairperson()
-      .catch(console.error);
-    */
+    getCurrentState()
+      .catch(console.error)
 
   })
 
@@ -240,24 +255,52 @@ function App() {
     e.preventDefault();
     const startRegCandUpdate = await contract.startRegisteringCandidates() //the smartcontract function!
     await startRegCandUpdate.wait(); //wait until the transaction is complete
+
+
+    var step1 = document.getElementById("step-1")
+    var progressbar = document.getElementById("progressbar")
+    step1.classList.add("blue");
+    progressbar.style.setProperty("width", "0%")
+
+    var step2 = document.getElementById("step-2")
+    var step3 = document.getElementById("step-3")
+    var step4 = document.getElementById("step-4")
+    step2.classList.remove("blue");
+    step3.classList.remove("blue");
+    step4.classList.remove("blue");
   }
 
   const handleStartRegisteringVoters = async (e) => {
     e.preventDefault();
     const startRegVotUpdate = await contract.startRegisteringVoters() //the smartcontract function!
     await startRegVotUpdate.wait(); //wait until the transaction is complete
+
+    let step2 = document.getElementById("step-2")
+    let progressbar = document.getElementById("progressbar")
+    step2.classList.add("blue");
+    progressbar.style.setProperty("width", "33%")
   }
 
   const handleStartVotingSession = async (e) => {
     e.preventDefault();
     const startVotSesUpdate = await contract.startVotingSession() //the smartcontract function!
     await startVotSesUpdate.wait(); //wait until the transaction is complete
+
+    let step3 = document.getElementById("step-3")
+    let progressbar = document.getElementById("progressbar")
+    step3.classList.add("blue");
+    progressbar.style["width"] = "66%";
   }
 
   const handleEndVotingSession = async (e) => {
     e.preventDefault();
     const endVotSesUpdate = await contract.endVotingSession() //the smartcontract function!
     await endVotSesUpdate.wait(); //wait until the transaction is complete
+
+    let step4 = document.getElementById("step-4")
+    let progressbar = document.getElementById("progressbar")
+    step4.classList.add("blue");
+    progressbar.style["width"] = "100%";
   }
 
   // Registering Candidates Handler
@@ -299,13 +342,13 @@ function App() {
 
           <div class="progresses py-4">
             <ul class="d-flex align-items-center justify-content-between">
-              <li id="step-1" class="blue"></li>
-              <li id="step-2" class="blue"></li>
-              <li id="step-3" class="blue"></li>
-              <li id="step-4" class="blue"></li>
+              <li id="step-1" ></li>
+              <li id="step-2" ></li>
+              <li id="step-3" ></li>
+              <li id="step-4" ></li>
             </ul>
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style={{ width: '100%' }}></div>
+              <div class="progress-bar" id="progressbar" role="progressbar" style={{ width: '0%' }}></div>
             </div>
           </div>
         </div>
