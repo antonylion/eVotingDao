@@ -55,24 +55,12 @@ function App() {
     },
     {
       "inputs": [],
-      "name": "getCandidates",
+      "name": "getCandidatesNames",
       "outputs": [
         {
-          "components": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "voteCount",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct Ballot.Candidate[]",
+          "internalType": "string[]",
           "name": "",
-          "type": "tuple[]"
+          "type": "string[]"
         }
       ],
       "stateMutability": "view",
@@ -94,6 +82,20 @@ function App() {
     {
       "inputs": [],
       "name": "getCurrentState",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+
+      "inputs": [],
+      "name": "getTest",
       "outputs": [
         {
           "internalType": "string",
@@ -225,7 +227,6 @@ function App() {
   const contract = new ethers.Contract(contractAddress, ABI, signer);
 
 
-
   useEffect(() => {
 
     const connectWallet = async () => {
@@ -334,6 +335,51 @@ function App() {
     setWinnerName(tallyResult);
   }
 
+  const handleVote = async (e) => {
+    e.preventDefault();
+    var i = 0;
+    var radioCandidates = document.getElementsByName('flexRadioDefault');
+    var votedCandidateIndex = -1;
+    for (i = 0; i < radioCandidates.length; i++) {
+      if (radioCandidates[i].checked) {
+        const candidates = await contract.getCandidatesNames();
+        votedCandidateIndex = i;
+        break;
+      }
+    }
+
+    const voteAction = await contract.vote(votedCandidateIndex);
+    await voteAction.wait(); //wait until the transaction is complete
+  }
+
+  const getListCandidates = async (e) => {
+    e.preventDefault();
+    const candidates = await contract.getCandidatesNames(); //no wait because it is a view
+    console.log(candidates);
+
+    const radioButtonsWrapElem = document.getElementById("radioButtonsWrapElem");
+
+    for (let key in candidates) {
+      let div = document.createElement("div");
+      div.className = "form-check";
+
+      let input = document.createElement("input");
+      input.className = "form-check-input"
+      input.type = "radio";
+      input.name = "flexRadioDefault";
+      input.id = "flexRadioDefault1";
+
+      let label = document.createElement("label");
+      label.className = "form-check-label"
+      label.for = "flexRadioDefault1"
+      label.innerText = candidates[key];
+
+      div.appendChild(input);
+      div.appendChild(label);
+      radioButtonsWrapElem.appendChild(div);
+    }
+  }
+
   return (
     <div className="container">
       <div className='row'>
@@ -349,6 +395,7 @@ function App() {
             </ul>
             <div class="progress">
               <div class="progress-bar" id="progressbar" role="progressbar" style={{ width: '0%' }}></div>
+
             </div>
           </div>
         </div>
@@ -390,6 +437,24 @@ function App() {
           <button type="submit" className="btn btn-dark" onSubmit={handleTallyVotes} value={winnerName}>Tally votes</button>
         </div>
       </div>
+
+
+
+
+
+      <h1>Voter - eVotingBlockchain</h1>
+      <form className="mt-5" onSubmit={getListCandidates}>
+        <button type="submit" className="btn btn-primary">Get list candidates</button>
+      </form>
+
+      <div id="radioButtonsWrapElem"></div>
+
+      <form className="mt-5" onSubmit={handleVote}>
+        <button type="submit" className="btn btn-primary">Submit</button>
+      </form>
+
+
+
     </div>
   );
 }
