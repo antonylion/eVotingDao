@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from "ethers"
-import "./App.css";
+import { ProgressBar } from "react-bootstrap"
+import "./App.css"
 
 function App() {
   const [winnerName, setWinnerName] = useState('');
@@ -292,19 +293,21 @@ function App() {
 
   return (
     <div className="container">
-      <div className="row">
-        <h1>Admin - eVotingBlockchain</h1> 
-        <div className="checkout-wrap col-md-7 col-sm-12 col-xs-12">
-            <ul className="checkout-bar">
-                <li className="active"><a href="#cand-reg">Candidates Registration</a>
-                </li>
-                <li className=""><a href="#voter-reg">Voters Registrarion</a>
-                </li>
-                <li className=""><a href="#voting">Voting Session</a>
-                </li>
-                <li className=""><a href="#tally">Tally Votes</a>
-                </li>
+      <div className='row'>
+        <div className='col-sm'>
+          <h1>Admin - eVotingBlockchain</h1>
+
+          <div class="progresses py-4">
+            <ul class="d-flex align-items-center justify-content-between">
+              <li id="step-1" class="blue"></li>
+              <li id="step-2" class="blue"></li>
+              <li id="step-3" class="blue"></li>
+              <li id="step-4" class="blue"></li>
             </ul>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style={{ width: '100%' }}></div>
+            </div>
+          </div>
         </div>
       </div>
 

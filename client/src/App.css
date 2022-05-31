@@ -1,144 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+/* Resetting */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 body {
-    padding:20px;
-    margin:20px;
+    background-color: #ffffff;
 }
-.checkout-wrap {
-    font-family:'PT Sans Caption', sans-serif;
-    margin: 30px auto 100px;
-    z-index: 0;
+
+.wrapper {
+    max-width: 900px;
+    margin: auto;
 }
-ul.checkout-bar li {
-    color: #ccc;
-    font-size: 16px;
-    font-weight: 600;
+
+.wrapper .row {
+    padding: 0;
+    --bs-gutter-x: var(--bs-gutter-x)
+}
+
+.progresses {
     position: relative;
-    display: inline-block;
-    margin: 50px auto;
-    padding: 0;
-    text-align: center;
-    width: 24.5%;
+    max-width: 70%;
+    margin: auto;
 }
-ul.checkout-bar li:before {
-    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    background: #ddd;
-    border: 2px solid #FFF;
+
+.progresses ul {
+    list-style: none;
+    /* border: 1px solid red; */
+    padding: 0;
+}
+
+.progresses ul li {
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 700;
+    background-color: #f0f0f0;
+    z-index: 200;
+    position: relative;
+}
+
+.progresses ul li.blue {
+    color: #3268ff;
+    background-color: #3268ff;
+}
+
+.progresses ul li::after {
+    position: absolute;
+    top: 35px;
+    left: -15px;
+    font-size: 0.8rem;
+    width: 90px;
+}
+
+#step-1::after {
+    content: "Registering Candidates";
+    left: -100%;
+}
+
+#step-2::after {
+    content: "Registering Voters";
+    left: -100%;
+}
+
+#step-3::after {
+    content: "Voting";
+    left: -100%;
+}
+
+#step-4::after {
+    content: "Tally";
+    left: -100%;
+}
+
+.progresses .progress {
+    height: 0.8rem;
+    width: 100%;
+    top: 33px;
+    position: absolute;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+#products-list {
+    height: 250px;
+    overflow-y: scroll;
+}
+
+#products-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#products-list::-webkit-scrollbar-track {
+    background-color: #7c7c7c;
+    border-radius: 5px;
+}
+
+#products-list::-webkit-scrollbar-thumb {
+    border: 2px solid #cfcfcf;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+#products-list .product .product-img {
+    width: 100%;
+    height: 80px;
+    object-fit: contain;
+    background-color: #e8e8e8;
+}
+
+#products-list .product .btn.btn-primary {
+    font-size: 0.6rem;
+    padding: .2rem;
+    border-radius: 0;
+    width: 20px;
+}
+
+#products-list .product .number {
+    border-radius: 0;
+    width: 20px;
     text-align: center;
-    text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
-    height: 34px;
-    left: 40%;
-    line-height: 34px;
-    position: absolute;
-    top: -60px;
-    width: 34px;
-    z-index: 99999;
 }
-ul.checkout-bar li.active {
-    color: #A6447A;
-    font-weight: bold;
+
+/* #products-list .product {
+    font-size: 0.85rem;
+} */
+
+#products-list .btn.btn-dark {
+    border-radius: 0;
+    border-top-left-radius: 15px;
+    font-size: 0.7rem;
+    width: 50px;
+    border: none;
+    background-color: #616161 !important;
 }
-ul.checkout-bar li.active:before {
-    background: #A6447A;
+
+#billing .form-group input[type="text"] {
+    border: none;
+    height: 40px;
+    padding: 10px;
+    outline: none;
 }
-ul.checkout-bar li.visited {
-    color: #036c99;
-    z-index: 99999;
-    background: none;
+
+#billing .form-group .btn.btn-dark {
+    background-color: #616161 !important;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
 }
-ul.checkout-bar li.visited:before {
-    background: #036c99;
-    z-index: 99999;
+
+#billing .form-group .btn.btn-dark:focus {
+    box-shadow: none;
 }
-ul.checkout-bar li:nth-child(1):before {
-    content:"1";
+
+#billing #discount,
+#billing #total {
+    height: 45px;
+    font-size: 1.2rem;
+    color: #bbb;
 }
-ul.checkout-bar li:nth-child(2):before {
-    content:"2";
+
+#billing #discount div,
+#billing #total div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
 }
-ul.checkout-bar li:nth-child(3):before {
-    content:"3";
-}
-ul.checkout-bar li:nth-child(4):before {
-    content:"4";
-}
-ul.checkout-bar li:nth-child(5):before {
-    content:"5";
-}
-ul.checkout-bar li:nth-child(6):before {
-    content:"6";
-}
-ul.checkout-bar a {
-    color: #ccc;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: none;
-}
-ul.checkout-bar li.active a {
-    color: #A6447A;
-}
-ul.checkout-bar li.visited a {
-    color: #036c99;
-}
-.checkout-bar li.active:after {
-    -webkit-animation: myanimation 3s 0;
-    background-size: 35px 35px;
-    background-color: #A6447A;
-    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    content:"";
-    height: 15px;
+
+#billing #btns .btn {
     width: 100%;
-    left: 50%;
-    position: absolute;
-    top: -50px;
-    z-index: 0;
+    border-radius: 0;
+    padding: 8px 10px;
+    color: #3268ff;
+    border: 1px solid #3268ff;
 }
-ul.checkout-bar {
-    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    background-size: 35px 35px;
-    background-color: #EcEcEc;
-    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
-    border-radius: 15px;
-    height: 15px;
-    margin: 0 -15px 0;
-    padding: 0;
-    position: absolute;
-    width: 100%;
+
+#billing #btns .btn.btn-default:hover {
+    background-color: #3268ff;
+    color: #fff;
 }
-ul.checkout-bar:before {
-    background-size: 35px 35px;
-    background-color: #036c99;
-    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-    content:" ";
-    height: 15px;
-    left: 0;
-    position: absolute;
-    width: 14%;
+
+#billing #btns .btn.btn-primary {
+    background-color: #6890ff !important;
+    color: #fff;
 }
-ul.checkout-bar li.visited:after {
-    background-size: 35px 35px;
-    background-color: #036c99;
-    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
-    content:"";
-    height: 15px;
-    left: 50%;
-    position: absolute;
-    top: -50px;
-    width: 100%;
-    z-index: 99;
+
+
+/* Backgrounds */
+.bg-dark {
+    background-color: #616161 !important;
+}
+
+/* Media Queries */
+
+@media(max-width: 355px) {
+    #products-list .product {
+        font-size: 0.85rem;
+    }
+}
+
+@media(max-width: 330px) {
+    #billing #btns .btn {
+        font-size: .85rem;
+    }
+}
+
+h1 {
+    text-align: center;
+}
+
+ul {
+    text-align: center;
 }
