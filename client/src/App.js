@@ -234,20 +234,22 @@ function App() {
       await provider.send("eth_requestAccounts", []);
     }
 
+    /*
     const getCurrentState = async () => {
       const state = await contract.getCurrentState();
       switch(state){
         case "Tally Votes"
       }
 
-    }
+    }*/
 
     connectWallet()
       .catch(console.error);
 
+      /*
     getCurrentState()
       .catch(console.error)
-
+*/
   })
 
   // State Handlers
