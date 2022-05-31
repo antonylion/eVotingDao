@@ -24,6 +24,10 @@ contract Ballot {
     mapping(address => Voter) public voters;
 
     Candidate[] public candidates;
+
+    string[] private candidateNames;
+
+    string private prova;
     
     enum State {
         RegisteringCandidates,
@@ -38,6 +42,7 @@ contract Ballot {
         chairperson = msg.sender;
         voters[chairperson].rightToVote = true;
         state = State.TallyVotes;
+        prova = "ciao";
     }
     
     // MODIFIERS
@@ -105,6 +110,7 @@ contract Ballot {
                 name: candidateName,
                 voteCount: 0
             }));
+        candidateNames.push(candidateName);
     }
     
     /** 
@@ -135,8 +141,12 @@ contract Ballot {
         sender.rightToVote = false;
     }
 
-    function getCandidates() public view returns(Candidate[] memory){
-        return candidates;
+    function getCandidatesNames() public view returns(string[] memory){
+        return candidateNames;
+    }
+
+    function getTest() public view returns(string memory){
+        return prova;
     }
 
     function getChairperson() public view returns(address){
@@ -157,7 +167,7 @@ contract Ballot {
         }
     }
 
-    function returnCurrentState() external view returns (string memory) {
+    function getCurrentState() external view returns (string memory) {
         State temp = state;
         if (temp == State.RegisteringCandidates) return "Registering Candidates";
         if (temp == State.RegisteringVoters) return "Registering Voters";
