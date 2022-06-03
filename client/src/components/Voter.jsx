@@ -3,10 +3,7 @@ import { ethers } from "ethers"
 import { ProgressBar } from "react-bootstrap"
 
 function Voter() {
-  const [winnerName, setWinnerName] = useState('');
-  const [currentState, setCurrentState] = useState('');
-  const [voterAddress, setVoterAddress] = useState('');
-  const [candidateName, setCandidateName] = useState('');
+  const [votingSession, setVotingSession] = useState('');
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -206,108 +203,34 @@ function Voter() {
       await provider.send("eth_requestAccounts", []);
     }
 
-    /*
+
     const getCurrentState = async () => {
+      const votingSessionState = document.getElementById("votingSessionState");
       const state = await contract.getCurrentState();
-      switch(state){
-        case "Tally Votes"
+      switch (state) {
+        case "Voting Session": setVotingSession("OPEN");
+          votingSessionState.className = "alert alert-success"
+          break;
+        default: setVotingSession("CLOSED");
+          votingSessionState.className = "alert alert-danger"
+          break;
       }
 
-    }*/
+    }
 
     connectWallet()
       .catch(console.error);
 
-      /*
     getCurrentState()
-      .catch(console.error)
+      .catch(console.error);
+
+    /*
+  getCurrentState()
+    .catch(console.error)
 */
   })
 
   // State Handlers
-
-  const handleStartRegisteringCandidates = async (e) => {
-    e.preventDefault();
-    const startRegCandUpdate = await contract.startRegisteringCandidates() //the smartcontract function!
-    await startRegCandUpdate.wait(); //wait until the transaction is complete
-
-
-    var step1 = document.getElementById("step-1")
-    var progressbar = document.getElementById("progressbar")
-    step1.classList.add("blue");
-    progressbar.style.setProperty("width", "0%")
-
-    var step2 = document.getElementById("step-2")
-    var step3 = document.getElementById("step-3")
-    var step4 = document.getElementById("step-4")
-    step2.classList.remove("blue");
-    step3.classList.remove("blue");
-    step4.classList.remove("blue");
-  }
-
-  const handleStartRegisteringVoters = async (e) => {
-    e.preventDefault();
-    const startRegVotUpdate = await contract.startRegisteringVoters() //the smartcontract function!
-    await startRegVotUpdate.wait(); //wait until the transaction is complete
-
-    let step2 = document.getElementById("step-2")
-    let progressbar = document.getElementById("progressbar")
-    step2.classList.add("blue");
-    progressbar.style.setProperty("width", "33%")
-  }
-
-  const handleStartVotingSession = async (e) => {
-    e.preventDefault();
-    const startVotSesUpdate = await contract.startVotingSession() //the smartcontract function!
-    await startVotSesUpdate.wait(); //wait until the transaction is complete
-
-    let step3 = document.getElementById("step-3")
-    let progressbar = document.getElementById("progressbar")
-    step3.classList.add("blue");
-    progressbar.style["width"] = "66%";
-  }
-
-  const handleEndVotingSession = async (e) => {
-    e.preventDefault();
-    const endVotSesUpdate = await contract.endVotingSession() //the smartcontract function!
-    await endVotSesUpdate.wait(); //wait until the transaction is complete
-
-    let step4 = document.getElementById("step-4")
-    let progressbar = document.getElementById("progressbar")
-    step4.classList.add("blue");
-    progressbar.style["width"] = "100%";
-  }
-
-  // Registering Candidates Handler
-  const handleCandidateNameChange = (e) => {
-    setCandidateName(e.target.value);
-  }
-
-  const handleRegisterCandidate = async (e) => {
-    e.preventDefault();
-    const voteUpdate = await contract.registerCandidate(candidateName); //the smartcontract function!
-    await voteUpdate.wait(); //wait until the transaction is complete
-    setCandidateName('');
-  }
-
-  // Registering Voters Handler
-  const handleVoterAddressChange = (e) => {
-    setVoterAddress(e.target.value);
-  }
-
-  const handleGiveRightToVote = async (e) => {
-    e.preventDefault();
-    const voteUpdate = await contract.giveRightToVote(voterAddress); //the smartcontract function!
-    await voteUpdate.wait(); //wait until the transaction is complete
-    setVoterAddress('');
-  }
-
-  const handleTallyVotes = async (e) => {
-    e.preventDefault();
-    const tallyResult = await contract.tallyVotes() //the smartcontract function!
-    await tallyResult.wait(); //wait until the transaction is complete
-    setWinnerName(tallyResult);
-  }
 
   const handleVote = async (e) => {
     e.preventDefault();
@@ -356,8 +279,8 @@ function Voter() {
 
   return (
     <div className="container">
-
       <h1>Voter - eVotingBlockchain</h1>
+      <h2 id="votingSessionState">Voting session: {votingSession}</h2>
       <form className="mt-5" onSubmit={getListCandidates}>
         <button type="submit" className="btn btn-primary">Get list candidates</button>
       </form>

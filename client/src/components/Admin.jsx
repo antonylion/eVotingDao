@@ -378,8 +378,9 @@ function Admin() {
 
   const handleTallyVotes = async (e) => {
     e.preventDefault();
+    console.log("entro");
     const tallyResult = await contract.tallyVotes() //the smartcontract function!
-    await tallyResult.wait(); //wait until the transaction is complete
+    //await tallyResult.wait(); /don't wait, for now we treat it as a view
     setWinnerName(tallyResult);
   }
 
@@ -436,8 +437,8 @@ function Admin() {
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
-          <h3>{winnerName}</h3>
-          <button type="submit" className="btn btn-dark" onSubmit={handleTallyVotes} value={winnerName}>Tally votes</button>
+          <h3>The winner is: {winnerName}</h3>
+          <button type="submit" className="btn btn-dark" onClick={handleTallyVotes} value={winnerName}>Tally votes</button>
         </div>
       </div>
 
