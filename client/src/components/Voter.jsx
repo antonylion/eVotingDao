@@ -64,7 +64,33 @@ function Voter() {
     },
     {
       "inputs": [],
+      "name": "getChairperson",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "getCurrentState",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTest",
       "outputs": [
         {
           "internalType": "string",
@@ -205,6 +231,7 @@ function Voter() {
 
 
     const getCurrentState = async () => {
+      console.log(votingSession);
       const votingSessionState = document.getElementById("votingSessionState");
       const state = await contract.getCurrentState();
       switch (state) {
@@ -218,16 +245,44 @@ function Voter() {
 
     }
 
+
+    const getListCandidates = async () => {
+      const candidates = await contract.getCandidatesNames(); //no wait because it is a view
+      console.log(candidates);
+  
+      const radioButtonsWrapElem = document.getElementById("radioButtonsWrapElem");
+  
+      for (let key in candidates) {
+        let div = document.createElement("div");
+        div.className = "form-check";
+  
+        let input = document.createElement("input");
+        input.className = "form-check-input"
+        input.type = "radio";
+        input.name = "flexRadioDefault";
+        input.id = "flexRadioDefault1";
+  
+        let label = document.createElement("label");
+        label.className = "form-check-label"
+        label.for = "flexRadioDefault1"
+        label.innerText = candidates[key];
+  
+        div.appendChild(input);
+        div.appendChild(label);
+        radioButtonsWrapElem.appendChild(div);
+      }
+    }
+
     connectWallet()
       .catch(console.error);
 
     getCurrentState()
       .catch(console.error);
 
-    /*
-  getCurrentState()
-    .catch(console.error)
-*/
+    if(!votingSession.localeCompare("OPEN")){
+      getListCandidates()
+        .catch(console.error);
+    }
   })
 
   // State Handlers
@@ -249,41 +304,10 @@ function Voter() {
     await voteAction.wait(); //wait until the transaction is complete
   }
 
-  const getListCandidates = async (e) => {
-    e.preventDefault();
-    const candidates = await contract.getCandidatesNames(); //no wait because it is a view
-    console.log(candidates);
-
-    const radioButtonsWrapElem = document.getElementById("radioButtonsWrapElem");
-
-    for (let key in candidates) {
-      let div = document.createElement("div");
-      div.className = "form-check";
-
-      let input = document.createElement("input");
-      input.className = "form-check-input"
-      input.type = "radio";
-      input.name = "flexRadioDefault";
-      input.id = "flexRadioDefault1";
-
-      let label = document.createElement("label");
-      label.className = "form-check-label"
-      label.for = "flexRadioDefault1"
-      label.innerText = candidates[key];
-
-      div.appendChild(input);
-      div.appendChild(label);
-      radioButtonsWrapElem.appendChild(div);
-    }
-  }
-
   return (
     <div className="container">
       <h1>Voter - eVotingBlockchain</h1>
       <h2 id="votingSessionState">Voting session: {votingSession}</h2>
-      <form className="mt-5" onSubmit={getListCandidates}>
-        <button type="submit" className="btn btn-primary">Get list candidates</button>
-      </form>
 
       <div id="radioButtonsWrapElem"></div>
 
