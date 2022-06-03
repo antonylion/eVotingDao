@@ -9,3 +9,5 @@ contract/artifacts/build-info
 contract/package_lock.json
 contract/packege.json
 contract/cache
+contract/contracts/Voting.sol
+contract/cache/solidity-files-cache.json

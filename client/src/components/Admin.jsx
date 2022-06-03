@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from "ethers"
-import { ProgressBar } from "react-bootstrap"
 
 function Admin() {
   const [winnerName, setWinnerName] = useState('');
-  const [currentState, setCurrentState] = useState('');
   const [voterAddress, setVoterAddress] = useState('');
   const [candidateName, setCandidateName] = useState('');
+  const [error, setError] = useState('')
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -67,33 +66,7 @@ function Admin() {
     },
     {
       "inputs": [],
-      "name": "getChairperson",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "getCurrentState",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getTest",
       "outputs": [
         {
           "internalType": "string",
@@ -232,77 +205,152 @@ function Admin() {
       await provider.send("eth_requestAccounts", []);
     }
 
-    /*
+
     const getCurrentState = async () => {
       const state = await contract.getCurrentState();
-      switch(state){
-        case "Tally Votes"
+      switch (state) {
+        case "Initial State": {
+          var progressbar = document.getElementById("progressbar")
+          progressbar.style.setProperty("width", "0%")
+          break;
+        }
+
+        case "Registering Candidates": {
+          var step1 = document.getElementById("step-1")
+          var progressbar = document.getElementById("progressbar")
+          step1.classList.add("blue");
+          progressbar.style.setProperty("width", "0%")
+          break;
+        }
+
+        case "Registering Voters": {
+          var step1 = document.getElementById("step-1")
+          var step2 = document.getElementById("step-2")
+          var progressbar = document.getElementById("progressbar")
+          step1.classList.add("blue");
+          step2.classList.add("blue");
+          progressbar.style.setProperty("width", "33%")
+          break;
+        }
+
+        case "Voting Session": {
+          var step1 = document.getElementById("step-1")
+          var step2 = document.getElementById("step-2")
+          var step3 = document.getElementById("step-3")
+          var progressbar = document.getElementById("progressbar")
+          step1.classList.add("blue");
+          step2.classList.add("blue");
+          step3.classList.add("blue");
+          progressbar.style.setProperty("width", "66%")
+          break;
+        }
+
+        case "Closed": {
+          var step1 = document.getElementById("step-1")
+          var step2 = document.getElementById("step-2")
+          var step3 = document.getElementById("step-3")
+          var step4 = document.getElementById("step-4")
+          step1.classList.add("blue");
+          step2.classList.add("blue");
+          step3.classList.add("blue");
+          step4.classList.add("blue");
+
+          var progressbar = document.getElementById("progressbar")
+          progressbar.style.setProperty("width", "100%")
+          break;
+        }
       }
 
-    }*/
+    }
 
     connectWallet()
       .catch(console.error);
 
-      /*
+
     getCurrentState()
       .catch(console.error)
-*/
   })
+
 
   // State Handlers
 
+
   const handleStartRegisteringCandidates = async (e) => {
-    e.preventDefault();
-    const startRegCandUpdate = await contract.startRegisteringCandidates() //the smartcontract function!
-    await startRegCandUpdate.wait(); //wait until the transaction is complete
+    try {
+      e.preventDefault();
+      const startRegCandUpdate = await contract.startRegisteringCandidates() //the smartcontract function!
+      await startRegCandUpdate.wait(); //wait until the transaction is complete
 
 
-    var step1 = document.getElementById("step-1")
-    var progressbar = document.getElementById("progressbar")
-    step1.classList.add("blue");
-    progressbar.style.setProperty("width", "0%")
+      var step1 = document.getElementById("step-1")
+      var progressbar = document.getElementById("progressbar")
+      step1.classList.add("blue");
+      progressbar.style.setProperty("width", "0%")
 
-    var step2 = document.getElementById("step-2")
-    var step3 = document.getElementById("step-3")
-    var step4 = document.getElementById("step-4")
-    step2.classList.remove("blue");
-    step3.classList.remove("blue");
-    step4.classList.remove("blue");
+      var step2 = document.getElementById("step-2")
+      var step3 = document.getElementById("step-3")
+      var step4 = document.getElementById("step-4")
+      step2.classList.remove("blue");
+      step3.classList.remove("blue");
+      step4.classList.remove("blue");
+    }
+
+    catch (e) {
+      alert(e.reason)
+    }
   }
 
   const handleStartRegisteringVoters = async (e) => {
-    e.preventDefault();
-    const startRegVotUpdate = await contract.startRegisteringVoters() //the smartcontract function!
-    await startRegVotUpdate.wait(); //wait until the transaction is complete
+    try {
+      e.preventDefault();
+      const startRegVotUpdate = await contract.startRegisteringVoters() //the smartcontract function!
+      await startRegVotUpdate.wait(); //wait until the transaction is complete
 
-    let step2 = document.getElementById("step-2")
-    let progressbar = document.getElementById("progressbar")
-    step2.classList.add("blue");
-    progressbar.style.setProperty("width", "33%")
+      let step2 = document.getElementById("step-2")
+      let progressbar = document.getElementById("progressbar")
+      step2.classList.add("blue");
+      progressbar.style.setProperty("width", "33%")
+    }
+
+    catch (e) {
+      alert(e.reason)
+    }
   }
 
   const handleStartVotingSession = async (e) => {
-    e.preventDefault();
-    const startVotSesUpdate = await contract.startVotingSession() //the smartcontract function!
-    await startVotSesUpdate.wait(); //wait until the transaction is complete
+    try {
+      e.preventDefault();
+      const startVotSesUpdate = await contract.startVotingSession() //the smartcontract function!
+      await startVotSesUpdate.wait(); //wait until the transaction is complete
 
-    let step3 = document.getElementById("step-3")
-    let progressbar = document.getElementById("progressbar")
-    step3.classList.add("blue");
-    progressbar.style["width"] = "66%";
+      let step3 = document.getElementById("step-3")
+      let progressbar = document.getElementById("progressbar")
+      step3.classList.add("blue");
+      progressbar.style["width"] = "66%";
+    }
+
+    catch (e) {
+      alert(e.reason)
+    }
   }
 
   const handleEndVotingSession = async (e) => {
-    e.preventDefault();
-    const endVotSesUpdate = await contract.endVotingSession() //the smartcontract function!
-    await endVotSesUpdate.wait(); //wait until the transaction is complete
+    try {
+      e.preventDefault();
+      const endVotSesUpdate = await contract.endVotingSession() //the smartcontract function!
+      await endVotSesUpdate.wait(); //wait until the transaction is complete
 
-    let step4 = document.getElementById("step-4")
-    let progressbar = document.getElementById("progressbar")
-    step4.classList.add("blue");
-    progressbar.style["width"] = "100%";
+      let step4 = document.getElementById("step-4")
+      let progressbar = document.getElementById("progressbar")
+      step4.classList.add("blue");
+      progressbar.style["width"] = "100%";
+    }
+    catch (e) {
+      alert(e.reason)
+    }
   }
+
+
 
   // Registering Candidates Handler
   const handleCandidateNameChange = (e) => {
@@ -335,51 +383,6 @@ function Admin() {
     setWinnerName(tallyResult);
   }
 
-  const handleVote = async (e) => {
-    e.preventDefault();
-    var i = 0;
-    var radioCandidates = document.getElementsByName('flexRadioDefault');
-    var votedCandidateIndex = -1;
-    for (i = 0; i < radioCandidates.length; i++) {
-      if (radioCandidates[i].checked) {
-        const candidates = await contract.getCandidatesNames();
-        votedCandidateIndex = i;
-        break;
-      }
-    }
-
-    const voteAction = await contract.vote(votedCandidateIndex);
-    await voteAction.wait(); //wait until the transaction is complete
-  }
-
-  const getListCandidates = async (e) => {
-    e.preventDefault();
-    const candidates = await contract.getCandidatesNames(); //no wait because it is a view
-    console.log(candidates);
-
-    const radioButtonsWrapElem = document.getElementById("radioButtonsWrapElem");
-
-    for (let key in candidates) {
-      let div = document.createElement("div");
-      div.className = "form-check";
-
-      let input = document.createElement("input");
-      input.className = "form-check-input"
-      input.type = "radio";
-      input.name = "flexRadioDefault";
-      input.id = "flexRadioDefault1";
-
-      let label = document.createElement("label");
-      label.className = "form-check-label"
-      label.for = "flexRadioDefault1"
-      label.innerText = candidates[key];
-
-      div.appendChild(input);
-      div.appendChild(label);
-      radioButtonsWrapElem.appendChild(div);
-    }
-  }
-
   return (
     <div className="container">
       <div className='row'>
@@ -388,10 +391,10 @@ function Admin() {
 
           <div class="progresses py-4">
             <ul class="d-flex align-items-center justify-content-between">
-              <li id="step-1" ></li>
-              <li id="step-2" ></li>
-              <li id="step-3" ></li>
-              <li id="step-4" ></li>
+              <li name="step" id="step-1" ></li>
+              <li name="step" id="step-2" ></li>
+              <li name="step" id="step-3" ></li>
+              <li name="step" id="step-4" ></li>
             </ul>
             <div class="progress">
               <div class="progress-bar" id="progressbar" role="progressbar" style={{ width: '0%' }}></div>

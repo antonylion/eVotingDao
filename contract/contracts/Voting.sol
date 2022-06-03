@@ -28,6 +28,7 @@ contract Ballot {
     string[] private candidateNames;
     
     enum State {
+        InitialState,
         RegisteringCandidates,
         RegisteringVoters,
         VotingSession,
@@ -39,7 +40,7 @@ contract Ballot {
     constructor() {
         chairperson = msg.sender;
         voters[chairperson].rightToVote = true;
-        state = State.Closed;
+        state = State.InitialState;
     }
     
     // MODIFIERS
@@ -48,6 +49,11 @@ contract Ballot {
             msg.sender == chairperson,
             "Only chairperson can start and end the voting"
         );
+        _;
+    }
+
+    modifier initialState() {
+        require(state == State.InitialState, "it must be in Initial State");
         _;
     }
     
@@ -75,7 +81,7 @@ contract Ballot {
 
     function startRegisteringCandidates() public
         onlyChairperson
-        closedState
+        initialState
     {
         state = State.RegisteringCandidates;
     }
@@ -161,6 +167,7 @@ contract Ballot {
 
     function getCurrentState() external view returns (string memory) {
         State temp = state;
+        if (temp == State.InitialState) return "Initial State";
         if (temp == State.RegisteringCandidates) return "Registering Candidates";
         if (temp == State.RegisteringVoters) return "Registering Voters";
         if (temp == State.VotingSession) return "Voting Session";
