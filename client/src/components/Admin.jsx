@@ -330,54 +330,11 @@ function Admin() {
 
   const handleTallyVotes = async (e) => {
     e.preventDefault();
+    console.log("entro");
     const tallyResult = await contract.tallyVotes() //the smartcontract function!
-    await tallyResult.wait(); //wait until the transaction is complete
+    //await tallyResult.wait(); //wait until the transaction is complete
     setWinnerName(tallyResult);
-  }
-
-  const handleVote = async (e) => {
-    e.preventDefault();
-    var i = 0;
-    var radioCandidates = document.getElementsByName('flexRadioDefault');
-    var votedCandidateIndex = -1;
-    for (i = 0; i < radioCandidates.length; i++) {
-      if (radioCandidates[i].checked) {
-        const candidates = await contract.getCandidatesNames();
-        votedCandidateIndex = i;
-        break;
-      }
-    }
-
-    const voteAction = await contract.vote(votedCandidateIndex);
-    await voteAction.wait(); //wait until the transaction is complete
-  }
-
-  const getListCandidates = async (e) => {
-    e.preventDefault();
-    const candidates = await contract.getCandidatesNames(); //no wait because it is a view
-    console.log(candidates);
-
-    const radioButtonsWrapElem = document.getElementById("radioButtonsWrapElem");
-
-    for (let key in candidates) {
-      let div = document.createElement("div");
-      div.className = "form-check";
-
-      let input = document.createElement("input");
-      input.className = "form-check-input"
-      input.type = "radio";
-      input.name = "flexRadioDefault";
-      input.id = "flexRadioDefault1";
-
-      let label = document.createElement("label");
-      label.className = "form-check-label"
-      label.for = "flexRadioDefault1"
-      label.innerText = candidates[key];
-
-      div.appendChild(input);
-      div.appendChild(label);
-      radioButtonsWrapElem.appendChild(div);
-    }
+    console.log(tallyResult);
   }
 
   return (
@@ -433,8 +390,8 @@ function Admin() {
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
-          <h3>{winnerName}</h3>
-          <button type="submit" className="btn btn-dark" onSubmit={handleTallyVotes} value={winnerName}>Tally votes</button>
+          <h3>The winner is: {winnerName}</h3>
+          <button type="submit" className="btn btn-dark" onClick={handleTallyVotes} value={winnerName}>Tally votes</button>
         </div>
       </div>
 
