@@ -1,9 +1,9 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/antonylion/Desktop/SemesterStudy/BlockchainCryptocurrencies/eVotingBlockchain/contract/contracts/Voting.sol": {
-      "lastModificationDate": 1654018386950,
-      "contentHash": "7a09cb331ac4b7e47f6776c7e6445019",
+    "/home/alessandro/Blockchain/eVotingProject/contract/contracts/Voting.sol": {
+      "lastModificationDate": 1654097639000,
+      "contentHash": "2d3fe777cb271fd2b31ace0cc57e04c1",
       "sourceName": "contracts/Voting.sol",
       "solcConfig": {
         "version": "0.8.4",

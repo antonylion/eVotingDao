@@ -26,14 +26,12 @@ contract Ballot {
     Candidate[] public candidates;
 
     string[] private candidateNames;
-
-    string private prova;
     
     enum State {
         RegisteringCandidates,
         RegisteringVoters,
         VotingSession,
-        TallyVotes
+        Closed
     }
     
     State public state;
@@ -41,8 +39,7 @@ contract Ballot {
     constructor() {
         chairperson = msg.sender;
         voters[chairperson].rightToVote = true;
-        state = State.TallyVotes;
-        prova = "ciao";
+        state = State.Closed;
     }
     
     // MODIFIERS
@@ -69,14 +66,16 @@ contract Ballot {
         _;
     }
     
-    modifier tallyVotesState() {
-        require(state == State.TallyVotes, "it must be in Tally Votes");
+    modifier closedState() {
+        require(state == State.Closed, "it must be in Closed state");
         _;
     }
 
+    // CHANGE STATE FUNCTION
+
     function startRegisteringCandidates() public
         onlyChairperson
-        tallyVotesState
+        closedState
     {
         state = State.RegisteringCandidates;
     }
@@ -99,9 +98,10 @@ contract Ballot {
         onlyChairperson
         votingSessionState 
     {
-        state = State.TallyVotes;
+        state = State.Closed;
     }
-    
+
+    // FUNCTION
 
     function registerCandidate(string memory candidateName) public
         registeringCandidatesState
@@ -145,17 +145,9 @@ contract Ballot {
         return candidateNames;
     }
 
-    function getTest() public view returns(string memory){
-        return prova;
-    }
-
-    function getChairperson() public view returns(address){
-        return chairperson;
-    }
-
     function tallyVotes() public view 
-        tallyVotesState
         onlyChairperson
+        closedState
         returns (string memory winnerName)
     {
         uint winningVoteCount = 0;
@@ -172,7 +164,7 @@ contract Ballot {
         if (temp == State.RegisteringCandidates) return "Registering Candidates";
         if (temp == State.RegisteringVoters) return "Registering Voters";
         if (temp == State.VotingSession) return "Voting Session";
-        if (temp == State.TallyVotes) return "Tally Votes";
+        if (temp == State.Closed) return "Closed";
         return "";
     }
 }

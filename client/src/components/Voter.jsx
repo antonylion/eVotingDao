@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from "ethers"
 import { ProgressBar } from "react-bootstrap"
-import "./App.css"
 
-function App() {
+function Voter() {
   const [winnerName, setWinnerName] = useState('');
   const [currentState, setCurrentState] = useState('');
   const [voterAddress, setVoterAddress] = useState('');
@@ -93,7 +92,6 @@ function App() {
       "type": "function"
     },
     {
-
       "inputs": [],
       "name": "getTest",
       "outputs": [
@@ -384,65 +382,6 @@ function App() {
 
   return (
     <div className="container">
-      <div className='row'>
-        <div className='col-sm'>
-          <h1>Admin - eVotingBlockchain</h1>
-
-          <div class="progresses py-4">
-            <ul class="d-flex align-items-center justify-content-between">
-              <li id="step-1" ></li>
-              <li id="step-2" ></li>
-              <li id="step-3" ></li>
-              <li id="step-4" ></li>
-            </ul>
-            <div class="progress">
-              <div class="progress-bar" id="progressbar" role="progressbar" style={{ width: '0%' }}></div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="row">
-
-        <div className="col-sm">
-          <form className="mt-5" onSubmit={handleStartRegisteringCandidates}>
-            <button type="submit" className="btn btn-primary">Start Registering Candidates</button>
-          </form>
-          <form className="mt-5" onSubmit={handleStartRegisteringVoters}>
-            <button type="submit" className="btn btn-primary">Start Registering Voters</button>
-          </form>
-          <form className="mt-5" onSubmit={handleStartVotingSession}>
-            <button type="submit" className="btn btn-primary">Start Voting Session</button>
-          </form>
-          <form className="mt-5" onSubmit={handleEndVotingSession}>
-            <button type="submit" className="btn btn-primary">End Voting Session</button>
-          </form>
-        </div>
-
-        <div className="col-sm">
-          <form className="mt-5" onSubmit={handleRegisterCandidate}>
-            <div className="mb-3">
-              <label className="form-label">Register candidate</label>
-              <input type="text" className="form-control" onChange={handleCandidateNameChange} value={candidateName} />
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </form>
-          <form className="mt-5" onSubmit={handleGiveRightToVote}>
-            <div className="mb-3">
-              <label className="form-label">Give right to vote</label>
-              <input type="text" className="form-control" onChange={handleVoterAddressChange} value={voterAddress} />
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </form>
-          <h3>{winnerName}</h3>
-          <button type="submit" className="btn btn-dark" onSubmit={handleTallyVotes} value={winnerName}>Tally votes</button>
-        </div>
-      </div>
-
-
-
-
 
       <h1>Voter - eVotingBlockchain</h1>
       <form className="mt-5" onSubmit={getListCandidates}>
@@ -455,10 +394,8 @@ function App() {
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
 
-
-
     </div>
   );
 }
 
-export default App;
+export default Voter;

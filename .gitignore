@@ -2,5 +2,10 @@ client/node_modules
 contract/node_modules
 .DS_Store
 client/.DS_Store
+client/package_lock.json
+client/packege.json
 contract/.DS_Store
 contract/artifacts/build-info
+contract/package_lock.json
+contract/packege.json
+contract/cache
