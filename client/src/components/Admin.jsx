@@ -332,7 +332,7 @@ function Admin() {
     e.preventDefault();
     console.log("entro");
     const tallyResult = await contract.tallyVotes() //the smartcontract function!
-    //await tallyResult.wait(); //wait until the transaction is complete
+    //await tallyResult.wait(); /don't wait, for now we treat it as a view
     setWinnerName(tallyResult);
     console.log(tallyResult);
   }
