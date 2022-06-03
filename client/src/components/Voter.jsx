@@ -3,10 +3,7 @@ import { ethers } from "ethers"
 import { ProgressBar } from "react-bootstrap"
 
 function Voter() {
-  const [winnerName, setWinnerName] = useState('');
-  const [currentState, setCurrentState] = useState('');
-  const [voterAddress, setVoterAddress] = useState('');
-  const [candidateName, setCandidateName] = useState('');
+  const [votingSession, setVotingSession] = useState('');
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -232,21 +229,30 @@ function Voter() {
       await provider.send("eth_requestAccounts", []);
     }
 
-    /*
+
     const getCurrentState = async () => {
+      const votingSessionState = document.getElementById("votingSessionState");
       const state = await contract.getCurrentState();
-      switch(state){
-        case "Tally Votes"
+      switch (state) {
+        case "Voting Session": setVotingSession("OPEN");
+          votingSessionState.className = "alert alert-success"
+          break;
+        default: setVotingSession("CLOSED");
+          votingSessionState.className = "alert alert-danger"
+          break;
       }
 
-    }*/
+    }
 
     connectWallet()
       .catch(console.error);
 
-      /*
     getCurrentState()
-      .catch(console.error)
+      .catch(console.error);
+
+    /*
+  getCurrentState()
+    .catch(console.error)
 */
   })
 
@@ -299,8 +305,8 @@ function Voter() {
 
   return (
     <div className="container">
-
       <h1>Voter - eVotingBlockchain</h1>
+      <h2 id="votingSessionState">Voting session: {votingSession}</h2>
       <form className="mt-5" onSubmit={getListCandidates}>
         <button type="submit" className="btn btn-primary">Get list candidates</button>
       </form>
