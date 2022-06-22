@@ -15,10 +15,8 @@ function Home() {
           <div class="col-lg-5">
             <h1 class="font-weight-light">Home</h1>
             <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
+              Project for the course Blockchain and Cryptocurrencies by Alessandro Musarella and Antony Zappacosta.
+              Decentralized voting system built upon Solidity smart contract and Hardhat Ethereum development environment.
             </p>
           </div>
         </div>

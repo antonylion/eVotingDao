@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from "ethers"
-import { ProgressBar } from "react-bootstrap"
 
 function Voter() {
   const [votingSession, setVotingSession] = useState('');
@@ -9,6 +8,7 @@ function Voter() {
   const signer = provider.getSigner();
 
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  //const contractAddress = "0xC90BEdfFBda6e7C799d9ba0DB62a58355e973d45";
 
   // The ERC-20 Contract ABI, which is a common contract interface
   // for tokens (this is the Human-Readable ABI format)
@@ -231,7 +231,6 @@ function Voter() {
 
 
     const getCurrentState = async () => {
-      console.log(votingSession);
       const votingSessionState = document.getElementById("votingSessionState");
       const state = await contract.getCurrentState();
       switch (state) {

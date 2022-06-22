@@ -5,12 +5,12 @@ function Admin() {
   const [winnerName, setWinnerName] = useState('');
   const [voterAddress, setVoterAddress] = useState('');
   const [candidateName, setCandidateName] = useState('');
-  const [error, setError] = useState('')
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  //const contractAddress = "0xC90BEdfFBda6e7C799d9ba0DB62a58355e973d45";
 
   // The ERC-20 Contract ABI, which is a common contract interface
   // for tokens (this is the Human-Readable ABI format)

@@ -27,7 +27,7 @@ function Navigation() {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/reg_cand">
+                <NavLink className="nav-link" to="/candidate">
                   Candidate Registration
                 </NavLink>
               </li>
