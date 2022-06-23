@@ -37,8 +37,8 @@ contract Ballot {
     
     State public state;
 
-    constructor() {
-        chairperson = msg.sender;
+    constructor(address daoContract) {
+        chairperson = daoContract;
         voters[chairperson].rightToVote = true;
         state = State.InitialState;
     }
