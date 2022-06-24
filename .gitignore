@@ -11,3 +11,4 @@ contract/packege.json
 contract/cache
 contract/contracts/Voting.sol
 contract/cache/solidity-files-cache.json
+node_modules

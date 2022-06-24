@@ -7,7 +7,7 @@ pragma experimental ABIEncoderV2;
  * @dev Implements voting process along with vote delegation
  */
 
-contract Voting {
+contract VotingInterface {
     function startRegisteringCandidates() public {}
     function startRegisteringVoters() public {}
     function startVotingSession() public {}
@@ -63,28 +63,28 @@ contract Dao {
     function startRegisteringCandidates(address dappContract) public
         onlyDaoMembers
     {
-        Voting b = Voting(dappContract);
+        VotingInterface b = VotingInterface(dappContract);
         b.startRegisteringCandidates();
     }
     
     function startRegisteringVoters(address dappContract) public
         onlyDaoMembers
     {
-        Voting b = Voting(dappContract);
+        VotingInterface b = VotingInterface(dappContract);
         b.startRegisteringVoters();
     }
     
     function startVotingSession(address dappContract) public
         onlyDaoMembers
     {
-        Voting b = Voting(dappContract);
+        VotingInterface b = VotingInterface(dappContract);
         b.startVotingSession();
     }
 
     function endVotingSession(address dappContract) public
         onlyDaoMembers 
     {
-        Voting b = Voting(dappContract);
+        VotingInterface b = VotingInterface(dappContract);
         b.endVotingSession();
     }
 
@@ -156,7 +156,7 @@ contract Dao {
 
         if (voterProposals[proposalId].pros > voterProposals[proposalId].cons) {
             require(numberOfVotes >= quorum, "quorum is not reached");
-            Voting b = Voting(dappContract);
+            VotingInterface b = VotingInterface(dappContract);
             b.giveRightToVote(voterProposals[proposalId].voterDapp);
         }
     }
@@ -168,7 +168,7 @@ contract Dao {
         uint256 numberOfVotes = candidateProposals[proposalId].pros + candidateProposals[proposalId].cons;
         if (candidateProposals[proposalId].pros > candidateProposals[proposalId].cons) {
             require(numberOfVotes >= quorum, "quorum is not reached");
-            Voting b = Voting(dappContract);
+            VotingInterface b = VotingInterface(dappContract);
             b.registerCandidate(candidateProposals[proposalId].candidateDapp);
         }
     }

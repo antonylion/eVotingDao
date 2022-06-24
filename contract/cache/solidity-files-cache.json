@@ -1,9 +1,45 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/home/alessandro/Blockchain/eVotingProject/contract/contracts/Voting.sol": {
-      "lastModificationDate": 1655544290185,
-      "contentHash": "fd19fd5318b55ff63f394af8751d6f1e",
+    "/home/alessandro/Blockchain/eVotingDao/contract/contracts/Dao.sol": {
+      "lastModificationDate": 1656093245114,
+      "contentHash": "7c945479126ff56a482bfc537c7d3ba5",
+      "sourceName": "contracts/Dao.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "Dao",
+        "VotingInterface"
+      ]
+    },
+    "/home/alessandro/Blockchain/eVotingDao/contract/contracts/Voting.sol": {
+      "lastModificationDate": 1656091334193,
+      "contentHash": "8f8ef4db9d1090984c0e0834390539a3",
       "sourceName": "contracts/Voting.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -33,7 +69,7 @@
         ">=0.7.0 <0.9.0"
       ],
       "artifacts": [
-        "Ballot"
+        "Voting"
       ]
     }
   }

@@ -3,10 +3,10 @@ pragma solidity >=0.7.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 /** 
- * @title Ballot
+ * @title Voting
  * @dev Implements voting process along with vote delegation
  */
-contract Ballot {
+contract Voting {
 
     struct Voter {
         bool rightToVote;
