@@ -41,6 +41,8 @@ contract Dao {
     CandidateProposal[] candidateProposals;
     uint256 quorum;
 
+    string test = "ciao";
+
     //memory or storage?
     constructor(address[] memory daoVotersParameter) {
         for (uint256 i = 0; i < daoVotersParameter.length; i++) {
@@ -58,6 +60,10 @@ contract Dao {
         );
         _;
     }
+
+    function getTest() public view returns(string memory){
+        return test;
+    } 
 
     /*------------- STATE HANDLERS -------------*/
     function startRegisteringCandidates(address dappContract) public

@@ -1,9 +1,9 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/home/alessandro/Blockchain/eVotingDao/contract/contracts/Dao.sol": {
-      "lastModificationDate": 1656093245114,
-      "contentHash": "7c945479126ff56a482bfc537c7d3ba5",
+    "/Users/antonylion/Desktop/SemesterStudy/BlockchainCryptocurrencies/eVotingDao/contract/contracts/Dao.sol": {
+      "lastModificationDate": 1656249918858,
+      "contentHash": "a4a7e1384f25539e168bb39732930bcc",
       "sourceName": "contracts/Dao.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -37,8 +37,8 @@
         "VotingInterface"
       ]
     },
-    "/home/alessandro/Blockchain/eVotingDao/contract/contracts/Voting.sol": {
-      "lastModificationDate": 1656091334193,
+    "/Users/antonylion/Desktop/SemesterStudy/BlockchainCryptocurrencies/eVotingDao/contract/contracts/Voting.sol": {
+      "lastModificationDate": 1656246892908,
       "contentHash": "8f8ef4db9d1090984c0e0834390539a3",
       "sourceName": "contracts/Voting.sol",
       "solcConfig": {

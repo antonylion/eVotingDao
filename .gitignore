@@ -4,6 +4,8 @@ contract/node_modules
 client/.DS_Store
 client/package_lock.json
 client/packege.json
+package_lock.json
+packege.json
 contract/.DS_Store
 contract/artifacts/build-info
 contract/package_lock.json
