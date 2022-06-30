@@ -40,8 +40,9 @@ contract Dao {
     VoterProposal[] voterProposals;
     CandidateProposal[] candidateProposals;
     uint256 quorum;
-
-    string test = "ciao";
+    
+    address votingContractAddr;
+    bool alreadySetDappAddress;
 
     //memory or storage?
     constructor(address[] memory daoVotersParameter) {
@@ -50,6 +51,8 @@ contract Dao {
         }
         if(daoVotersParameter.length % 2 == 0) quorum = daoVotersParameter.length / 2;
         else quorum = (daoVotersParameter.length + 1) / 2;
+
+        alreadySetDappAddress = false;
     }
 
     /*------------- MODIFIERS -------------*/
@@ -61,38 +64,49 @@ contract Dao {
         _;
     }
 
-    function getTest() public view returns(string memory){
-        return test;
-    } 
-
-    /*------------- STATE HANDLERS -------------*/
-    function startRegisteringCandidates(address dappContract) public
+    /*------------- SET Voting.sol ADDRESS ----------- */
+    function setVotingContractAddress(address addr) public
         onlyDaoMembers
     {
-        VotingInterface b = VotingInterface(dappContract);
+        require(!alreadySetDappAddress, "The address of the voting contract can be set only once");
+        alreadySetDappAddress = true;
+        votingContractAddr = addr;
+    }
+
+    /*------------- STATE HANDLERS -------------*/
+    function startRegisteringCandidates() public
+        onlyDaoMembers
+    {
+        VotingInterface b = VotingInterface(votingContractAddr);
         b.startRegisteringCandidates();
     }
     
-    function startRegisteringVoters(address dappContract) public
+    function startRegisteringVoters() public
         onlyDaoMembers
     {
-        VotingInterface b = VotingInterface(dappContract);
+        VotingInterface b = VotingInterface(votingContractAddr);
         b.startRegisteringVoters();
     }
     
-    function startVotingSession(address dappContract) public
+    function startVotingSession() public
         onlyDaoMembers
     {
-        VotingInterface b = VotingInterface(dappContract);
+        VotingInterface b = VotingInterface(votingContractAddr);
         b.startVotingSession();
     }
 
-    function endVotingSession(address dappContract) public
+    function endVotingSession() public
+        onlyDaoMembers 
+    {
+        VotingInterface b = VotingInterface(votingContractAddr);
+        b.endVotingSession();
+    }
+
+    function tallyVotes() public view
         onlyDaoMembers 
         returns(string memory)
     {
-        VotingInterface b = VotingInterface(dappContract);
-        b.endVotingSession();
+        VotingInterface b = VotingInterface(votingContractAddr);
         return b.tallyVotes();
     }
 
@@ -156,7 +170,7 @@ contract Dao {
 
     /*------------- END VOTE -------------*/
 
-    function endVoteVoter(uint256 proposalId, address dappContract)
+    function endVoteVoter(uint256 proposalId)
         public
         onlyDaoMembers
     {
@@ -164,19 +178,19 @@ contract Dao {
 
         if (voterProposals[proposalId].pros > voterProposals[proposalId].cons) {
             require(numberOfVotes >= quorum, "quorum is not reached");
-            VotingInterface b = VotingInterface(dappContract);
+            VotingInterface b = VotingInterface(votingContractAddr);
             b.giveRightToVote(voterProposals[proposalId].voterDapp);
         }
     }
 
-    function endVoteCandidate(uint256 proposalId, address dappContract)
+    function endVoteCandidate(uint256 proposalId)
         public
         onlyDaoMembers
     {
         uint256 numberOfVotes = candidateProposals[proposalId].pros + candidateProposals[proposalId].cons;
         if (candidateProposals[proposalId].pros > candidateProposals[proposalId].cons) {
             require(numberOfVotes >= quorum, "quorum is not reached");
-            VotingInterface b = VotingInterface(dappContract);
+            VotingInterface b = VotingInterface(votingContractAddr);
             b.registerCandidate(candidateProposals[proposalId].candidateDapp);
         }
     }

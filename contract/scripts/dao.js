@@ -36,11 +36,6 @@ const ABI = [
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "dappContract",
-        "type": "address"
       }
     ],
     "name": "endVoteCandidate",
@@ -54,11 +49,6 @@ const ABI = [
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "dappContract",
-        "type": "address"
       }
     ],
     "name": "endVoteVoter",
@@ -67,35 +57,10 @@ const ABI = [
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "dappContract",
-        "type": "address"
-      }
-    ],
-    "name": "endVotingSession",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "winnerName",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
-    "name": "getTest",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "endVotingSession",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -128,39 +93,47 @@ const ABI = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "dappContract",
+        "name": "addr",
         "type": "address"
       }
     ],
+    "name": "setVotingContractAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "startRegisteringCandidates",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "dappContract",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "startRegisteringVoters",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "dappContract",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "startVotingSession",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tallyVotes",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -211,6 +184,7 @@ addresses = [
 
 async function main() {
 
+  // DEPLOY CONTRACTS
   // Deploy first the dao contract, in order to make it the owner of the Voting contract
   const DAO = await hre.ethers.getContractFactory("Dao");
   const dao = await DAO.deploy(addresses);
@@ -224,11 +198,12 @@ async function main() {
   await voting.deployed();
   console.log("Voting contract deployed to: ", voting.address)
 
-  const signers = await hre.ethers.getSigners()
-  //console.log(temp)
-
   const votingContractAddress = voting.address
   const daoContractAddress = dao.address
+
+
+  // CREATE CONTRACT OBJECTS
+  const signers = await hre.ethers.getSigners()
 
   const contract0 = new hre.ethers.Contract(daoContractAddress, ABI, signers[10])
   const contract1 = new hre.ethers.Contract(daoContractAddress, ABI, signers[11])
@@ -236,18 +211,29 @@ async function main() {
   const contract3 = new hre.ethers.Contract(daoContractAddress, ABI, signers[13])
   const contract4 = new hre.ethers.Contract(daoContractAddress, ABI, signers[14])
 
-  await askQuestion("Press enter to allow the DAO proposing this two candidates: pippo, pluto");
+  // Set votingContractAddress
+  await contract0.setVotingContractAddress(votingContractAddress)
 
-  const startRegisteringCandidates = await contract0.startRegisteringCandidates(votingContractAddress)
+  // 1) CANDIDATE REGISTRATION
+  await askQuestion("Start candidates registration: (Enter to continue...)")
+  //await askQuestion("Press enter to allow the DAO proposing this two candidates: pippo, pluto");
+
+  const startRegisteringCandidates = await contract0.startRegisteringCandidates()
   await startRegisteringCandidates.wait()
 
+  console.log("  STATE: CandidateRegistration")
+
+  await askQuestion("Propose two candidates: (Enter to continue...)")
   const proposePippo = await contract1.proposeCandidate("pippo")
   await proposePippo.wait()
+  console.log("  proposed: Pippo")
 
   const proposePluto = await contract2.proposeCandidate("pluto")
   await proposePluto.wait()
+  console.log("  proposed: Pluto")
 
-  await askQuestion("Great! Now, press enter to allow the DAO registering pippo, pluto as candidates for the ballot");
+  //await askQuestion("Great! Now, press enter to allow the DAO registering pippo, pluto as candidates for the ballot");
+  await askQuestion("Make the dao vote for the candidates: (Enter to continue...)")
   const okToPippo0 = await contract0.voteCandidateProposal(0, true)
   await okToPippo0.wait()
   const okToPippo1 = await contract1.voteCandidateProposal(0, true)
@@ -262,14 +248,18 @@ async function main() {
   const okToPluto2 = await contract2.voteCandidateProposal(1, true)
   await okToPluto2.wait()
 
-  const endVoteCandidate0 = await contract0.endVoteCandidate(0, votingContractAddress)
+  await askQuestion("End the vote for the candidates: (Enter to continue...)")
+  const endVoteCandidate0 = await contract0.endVoteCandidate(0)
   await endVoteCandidate0.wait()
-  const endVoteCandidate1 = await contract0.endVoteCandidate(1, votingContractAddress)
+  const endVoteCandidate1 = await contract0.endVoteCandidate(1)
   await endVoteCandidate1.wait()
 
-  await askQuestion("Press enter to allow the DAO registering 3 voters that will be allowed to vote in the ballot");
-  const startRegisteringVoters = await contract0.startRegisteringVoters(votingContractAddress)
+  // 2) VOTER REGISTRATION
+  //await askQuestion("Press enter to allow the DAO registering 3 voters that will be allowed to vote in the ballot");
+  await askQuestion("Start voters registration: (Enter to continue...)")
+  const startRegisteringVoters = await contract0.startRegisteringVoters()
   await startRegisteringVoters.wait()
+  console.log("  STATE: VoterRegistration")
 
   const proposeVoter0 = await contract1.proposeVoter("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
   await proposeVoter0.wait()
@@ -286,10 +276,10 @@ async function main() {
   await okToVoter0_1.wait()
   const okToVoter0_2 = await contract2.voteVoterProposal(0, true)
   await okToVoter0_2.wait()
-  const endVoteVoter0 = await contract0.endVoteVoter(0, votingContractAddress)
+  const endVoteVoter0 = await contract0.endVoteVoter(0)
   await endVoteVoter0.wait()
 
-  console.log("Registered voter 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+  console.log("    Registered voter 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
 
   const okToVoter1_0 = await contract0.voteVoterProposal(1, true)
   await okToVoter1_0.wait()
@@ -297,10 +287,10 @@ async function main() {
   await okToVoter1_1.wait()
   const okToVoter1_2 = await contract2.voteVoterProposal(1, true)
   await okToVoter1_2.wait()
-  const endVoteVoter1 = await contract2.endVoteVoter(1, votingContractAddress)
+  const endVoteVoter1 = await contract2.endVoteVoter(1)
   await endVoteVoter1.wait()
 
-  console.log("Registered voter 0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
+  console.log("    Registered voter 0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
 
   const okToVoter2_0 = await contract0.voteVoterProposal(2, true)
   await okToVoter2_0.wait()
@@ -308,18 +298,26 @@ async function main() {
   await okToVoter2_1.wait()
   const okToVoter2_2 = await contract2.voteVoterProposal(2, true)
   await okToVoter2_2.wait()
-  const endVoteVoter2 = await contract4.endVoteVoter(2, votingContractAddress)
+  const endVoteVoter2 = await contract4.endVoteVoter(2, )
   await endVoteVoter2.wait()
 
-  console.log("Registered voter 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
+  console.log("    Registered voter 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
 
-  const startVotingSession = await contract3.startVotingSession(votingContractAddress)
+  // 3) VOTING SESSION
+  await askQuestion("Start voting session: (Enter to continue...)")
+  const startVotingSession = await contract3.startVotingSession()
   await startVotingSession.wait()
+  console.log("  STATE: VotingSession")
 
+  // 4) CLOSED
+  await askQuestion("End Voting Session: (Enter to continue...)")
+  //await askQuestion("Press enter to close the voting session:");
+  const endVotingSession = await contract0.endVotingSession()
+  await endVotingSession.wait()
+  console.log("  STATE: CLOSED")
 
-  await askQuestion("Press enter to close the voting session:");
-  const result = await contract0.endVotingSession(votingContractAddress)
-  console.log(result)
+  const winnerName = await contract0.tallyVotes()
+  console.log("    The winner is: "+winnerName)
 
 }
 

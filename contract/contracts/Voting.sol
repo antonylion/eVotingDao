@@ -158,7 +158,7 @@ contract Voting {
     {
         uint winningVoteCount = 0;
         for (uint p = 0; p < candidates.length; p++) {
-            if (candidates[p].voteCount > winningVoteCount) {
+            if (candidates[p].voteCount >= winningVoteCount) {
                 winningVoteCount = candidates[p].voteCount;
                 winnerName = candidates[p].name;
             }
