@@ -17,18 +17,8 @@ function Navigation() {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/admin">
-                  Admin
-                </NavLink>
-              </li>
-              <li className="nav-item">
                 <NavLink className="nav-link" to="/voter">
                   Voter
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/candidate">
-                  Candidate Registration
                 </NavLink>
               </li>
             </ul>

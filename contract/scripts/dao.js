@@ -75,7 +75,13 @@ const ABI = [
       }
     ],
     "name": "endVotingSession",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "winnerName",
+        "type": "string"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -309,6 +315,11 @@ async function main() {
 
   const startVotingSession = await contract3.startVotingSession(votingContractAddress)
   await startVotingSession.wait()
+
+
+  await askQuestion("Press enter to close the voting session:");
+  const result = await contract0.endVotingSession(votingContractAddress)
+  console.log(result)
 
 }
 

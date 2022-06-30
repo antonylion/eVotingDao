@@ -8,9 +8,7 @@ import {
   Navigation,
   Footer,
   Home,
-  Admin,
   Voter,
-  CandReg
 } from "./components";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -19,9 +17,7 @@ root.render(
       <Navigation />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/admin" element={<Admin />} />
         <Route path="/voter" element={<Voter />} />
-        <Route path="/candidate" element={<CandReg />} />
       </Routes>
       <Footer />
     </Router>,

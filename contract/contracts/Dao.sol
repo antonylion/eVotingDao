@@ -15,7 +15,7 @@ contract VotingInterface {
 
     function registerCandidate(string memory) public {}
     function giveRightToVote(address) public {}
-    function tallyVotes() public view {}
+    function tallyVotes() public view returns (string memory) {}
     function getCurrentState() external view returns (string memory) {}
 }
 
@@ -89,9 +89,11 @@ contract Dao {
 
     function endVotingSession(address dappContract) public
         onlyDaoMembers 
+        returns(string memory)
     {
         VotingInterface b = VotingInterface(dappContract);
         b.endVotingSession();
+        return b.tallyVotes();
     }
 
     /*------------- CANDIDATE AND VOTER PROPOSAL -------------*/
