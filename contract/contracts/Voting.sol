@@ -11,7 +11,6 @@ contract Voting {
     struct Voter {
         bool rightToVote;
         bool voted;  // if true, that person already voted
-        uint vote;   // index of the voted proposal
     }
 
     struct Candidate {
@@ -142,7 +141,6 @@ contract Voting {
         require(!sender.voted, "Already voted.");
         require(sender.rightToVote, "Has no right to vote");
         sender.voted = true;
-        sender.vote = candidate;
         candidates[candidate].voteCount++;
         sender.rightToVote = false;
     }

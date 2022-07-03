@@ -38,8 +38,8 @@
       ]
     },
     "/home/alessandro/Blockchain/eVotingDao/contract/contracts/Voting.sol": {
-      "lastModificationDate": 1656620078256,
-      "contentHash": "12a0bea6f181269f62f6c5df8dd2ba71",
+      "lastModificationDate": 1656686355850,
+      "contentHash": "4f088f56c300bc16560078203d50cc1a",
       "sourceName": "contracts/Voting.sol",
       "solcConfig": {
         "version": "0.8.4",
